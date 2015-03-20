@@ -1,0 +1,13 @@
+<div>
+    Controller says: {{ homeCtrl.message }}
+</div>
+<div>
+    Sign in with <a href="/auth/google/init">Google</a>
+</div>
+<button ng-click="homeCtrl.refreshStatus()">Check Status</button>
+<div ng-if="homeCtrl.webreqAuth">
+    Web reqs are authed!
+</div>
+<div ng-if="homeCtrl.socketAuth">
+    Sockets are authed!
+</div>
