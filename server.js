@@ -75,7 +75,7 @@ app.use(session({
     secret: secret,
     store: sessionStore
 }));
-app.use(express.static(__dirname + '/client'));
+app.use(express.static(__dirname + '/public'));
 app.use(passport.initialize());
 app.use(passport.session());
 

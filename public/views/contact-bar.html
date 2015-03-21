@@ -1,0 +1,42 @@
+<md-sidenav 
+    class="md-sidenav-left md-whiteframe-z2" 
+    md-is-locked-open="$mdMedia('gt-md')"
+    flex>
+    <md-toolbar class="md-accent">
+        <h6 class="md-toolbar-tools">Contacts</h6>
+        <md-button ng-click="close()" class="md-primary" hide-gt-md>
+            <
+        </md-button>
+    </md-toolbar>
+    <md-content class="md-padding">
+        <h5>Frequent</h5>
+        <p>Ignore me for now</p>
+        <md-divider></md-divider>
+        <h5>Topics</h5>
+        <md-list>
+            <md-item ng-repeat="topic in contactCtrl.topics">
+                <md-item-content>
+                    <md-button class="text-left" flex>{{ topic }}</md-button>
+                </md-item-content>
+            </md-item>
+        </md-list>
+        <md-divider></md-divider>
+        <h5>Users</h5>
+        <md-list>
+            <md-item ng-repeat="user in contactCtrl.users">
+                <md-item-content>
+                    <md-button class="text-left" flex>{{ user }}</md-button>
+                </md-item-content>
+            </md-item>
+        </md-list>
+        <md-divider></md-divider>
+        <h5>Teams</h5>
+        <md-list>
+            <md-item ng-repeat="team in contactCtrl.teams">
+                <md-item-content>
+                    <md-button class="text-left" flex>{{ team }}</md-button>
+                </md-item-content>
+            </md-item>
+        </md-list>
+    </md-content>
+</md-sidenav>

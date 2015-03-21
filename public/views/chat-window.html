@@ -1,0 +1,32 @@
+<md-content flex layout="column" layout-align="end" layout-padding>
+    <md-whiteframe ng-repeat="grouping in chatCtrl.messageGroups" 
+        class="md-whiteframe-z1 message-group-box md-padding">
+        <div layout="row">
+            <div>
+                <img src="http://www.w3schools.com/angular/pic_angular.jpg" class="msg-img">
+            </div>
+            <div flex layout="column" class="msg-box">
+                <div ng-repeat="message in grouping.messages track by $index" class="message">
+                    <div ng-if="$first">
+                        <strong>{{ grouping.sender }}</strong>
+                        <span class="text-italic">
+                            {{ message.sent | date:'shortTime' }}
+                        </span>
+                    </div>
+                    {{ message.text }}
+                </div>
+            </div>
+        </div>
+    </md-whiteframe>
+</md-content>
+<md-divider></md-divider>
+<md-content class="md-padding">
+    <form layout="row" ng-submit="chatCtrl.post(chatCtrl.message)">
+        <md-icon md-svg-src="img/message.svg" class="message-icon" flex="5"></md-icon>
+        <md-input-container class="no-pad" flex md-no-float>
+            <label>Message</label>
+            <textarea ng-model="chatCtrl.message">
+            </textarea>
+        </md-input-container>
+    </form>
+</md-content>
