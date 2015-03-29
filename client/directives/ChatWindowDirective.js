@@ -21,9 +21,6 @@
                 });
                 
                 this.message = '';
-                msgSvc.get().then(function(data){
-                    this.messageGroups = data;
-                });
                 this.post = function(message){
                     message = message.trim();
                     if(message) {

@@ -9,34 +9,18 @@
         </md-button>
     </md-toolbar>
     <md-content class="md-padding">
-        <h5>Frequent</h5>
-        <p>Ignore me for now</p>
-        <md-divider></md-divider>
-        <h5>Topics</h5>
-        <md-list>
-            <md-item ng-repeat="topic in contactCtrl.topics">
-                <md-item-content>
-                    <md-button class="text-left" flex>{{ topic }}</md-button>
-                </md-item-content>
-            </md-item>
-        </md-list>
-        <md-divider></md-divider>
-        <h5>Users</h5>
-        <md-list>
-            <md-item ng-repeat="user in contactCtrl.users">
-                <md-item-content>
-                    <md-button class="text-left" flex>{{ user }}</md-button>
-                </md-item-content>
-            </md-item>
-        </md-list>
-        <md-divider></md-divider>
-        <h5>Teams</h5>
-        <md-list>
-            <md-item ng-repeat="team in contactCtrl.teams">
-                <md-item-content>
-                    <md-button class="text-left" flex>{{ team }}</md-button>
-                </md-item-content>
-            </md-item>
-        </md-list>
+        <div ng-show="contactCtrl.loading">
+            <h3>Loading...</h3>
+            <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+        </div>
+        <div ng-show="!contactCtrl.loading">
+            <channel-list title="Chats" channels="contactCtrl.chats"></channel-list>
+            <md-divider></md-divider>
+            <channel-list title="Boards" channels="contactCtrl.boards"></channel-list>
+            <md-divider></md-divider>
+            <channel-list title="Users" channels="contactCtrl.users"></channel-list>
+            <md-divider></md-divider>
+            <channel-list title="Teams" channels="contactCtrl.teams"></channel-list>
+        </div>
     </md-content>
 </md-sidenav>
