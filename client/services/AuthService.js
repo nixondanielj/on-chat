@@ -4,11 +4,11 @@
     function($http, $q){
         var svc = {};
         svc.authenticate = function(email, password){
-            return $http.post('/login', { username: email, password: password });
+            return $http.post('/auth', { email: email, password: password });
         };
         svc.check = function(){
             var deferred = $q.defer();
-            $http.get('/status').then(function(){
+            $http.get('/auth').then(function(){
                 deferred.resolve({ authenticated: true });
             }, function(){
                 deferred.reject({ authenticated: false });
