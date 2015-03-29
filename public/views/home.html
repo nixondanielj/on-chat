@@ -1,13 +1,46 @@
-<div>
-    Controller says: {{ homeCtrl.message }}
-</div>
-<div>
-    Sign in with <a href="/auth/google/init">Google</a>
-</div>
-<button ng-click="homeCtrl.refreshStatus()">Check Status</button>
-<div ng-if="homeCtrl.webreqAuth">
-    Web reqs are authed!
-</div>
-<div ng-if="homeCtrl.socketAuth">
-    Sockets are authed!
+<div layout="row" layout-align="center center" >
+    <md-tabs flex="30">
+        <md-tab label="Sign In">
+            <md-content class="md-padding" layout="column">
+                <form ng-submit="homeCtrl.signin(email, password)">
+                    <md-input-container>
+                        <label>email</label>
+                        <input ng-model="email" required type="email">
+                    </md-input-container>
+                    <md-input-container>
+                        <label>password</label>
+                        <input type="password" required ng-model="password">
+                    </md-input-container>
+                    <md-button type="submit" class="md-raised md-primary">
+                        Sign In
+                    </md-button>
+                </form>
+            </md-content>
+            <md-progress-linear 
+                ng-show="homeCtrl.loading" 
+                md-mode="indeterminate">
+            </md-progress-linear>
+        </md-tab>
+        <md-tab label="Register">
+            <md-content class="md-padding" layout="column">
+                <form ng-submit="homeCtrl.register(email, password)">
+                    <md-input-container>
+                        <label>email</label>
+                        <input ng-model="email" required type="email">
+                    </md-input-container>
+                    <md-input-container>
+                        <label>password</label>
+                        <input type="password" required ng-model="password">
+                    </md-input-container>
+                    <md-button type="submit" class="md-raised md-primary">
+                        Register
+                    </md-button>
+                </form>
+            </md-content>
+            <md-progress-linear 
+                ng-="homeCtrl.loading" 
+                md-mode="indeterminate">
+            </md-progress-linear>
+        </md-tab>
+    </md-tabs>
 </div>

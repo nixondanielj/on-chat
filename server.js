@@ -2,10 +2,10 @@ var http = require('http');
 var express = require('express');
 var cookieParser = require('cookie-parser');
 
+var jsonParser = require('body-parser').json();
+
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/mydb');
-
-
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var sessionStore = new MongoStore({ mongooseConnection: mongoose.connection });
@@ -13,50 +13,26 @@ var sessionStore = new MongoStore({ mongooseConnection: mongoose.connection });
 // app setup
 var app = express();
 var server = http.createServer(app);
+app.use(express.static(__dirname + '/public'));
+app.use(jsonParser);
 
 var key = 'mykey', 
-    secret = 'fakeSecret',
-    GOOGLE_CLIENT_ID = '33815653519-jh94hqfkkumbgdsrb05ck1eoiea7kf8u.apps.googleusercontent.com',
-    GOOGLE_CLIENT_SECRET = '2DtFN21fZsU4ph4rBTvvzxAU';
+    secret = 'fakeSecret';
+
+app.use(session({
+    key: key,
+    secret: secret,
+    store: sessionStore
+}));
 
 var User = require('./models/User');
 var passport = require('passport');
-var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var LocalStrategy = require('passport-local').Strategy;
 
-passport.use(new GoogleStrategy({
-        clientID: GOOGLE_CLIENT_ID,
-        clientSecret: GOOGLE_CLIENT_SECRET,
-        callbackURL: 'https://mymean-nixondanielj.c9.io/auth/google'
-    },
-    function(accessToken, refreshToken, profile, done){
-        User.findOne({ email: profile.emails[0] }, function(err, user){
-            if(err){
-                // db error
-                done(err, null);
-            } else if(user){
-                // user exists, return it
-                done(null, user._id);
-            } else {
-                // user does not exist, create it
-                User.create({ 
-                    email: profile.emails[0], 
-                    displayName: profile.displayName || profile.emails[0]
-                }, function(err, user){
-                    if(err){
-                        console.log(err);
-                        done(err, null);
-                    } else {
-                        done(null, user);
-                    }
-                });
-            }
-        });
-    })
-);
 
 passport.serializeUser(function(user, callback){
         console.log('serializing user.');
-        callback(null, user._id);
+        callback(null, user.id);
     });
 
 passport.deserializeUser(function(id, callback){
@@ -70,33 +46,50 @@ passport.deserializeUser(function(id, callback){
        });
     });
 
-app.use(session({
-    key: key,
-    secret: secret,
-    store: sessionStore
+passport.use(
+    new LocalStrategy(
+        function(username, password, done){
+            User.findOne({ email: username }, function(err, user){
+                if(err){
+                    console.log(err);
+                    return done(err);
+                }
+                if (!user){
+                    return done(null, false, {message: 'Invalid email'});
+                }
+                if(user.password !== password){
+                    return done(null, false, {message: 'Incorrect password'});
+                }
+                return done(null, user);
+            });
 }));
-app.use(express.static(__dirname + '/public'));
+
 app.use(passport.initialize());
 app.use(passport.session());
+app.use('/user', require('./controllers/UserController'));
 
-app.get('/auth/google/init', passport.authenticate('google', { scope: 'email' }));
-
-app.get('/auth/google', 
-    passport.authenticate('google', {failureRedirect: '/#/authFail'}),
-    function(req, res) {
-        console.log('successful login');
-        res.redirect('/');
-    });
-app.get('/status', function(req, res){
-    if(req.isAuthenticated()){
-        res.send('thanks bro');
+app.get('/status', function(request, response, next){
+    if(request.isAuthenticated()){
+        response.sendStatus(200);
     } else {
-        res.sendStatus(401);
+        response.sendStatus(401);
     }
 });
+
+app.post('/login', function(request, response, next){
+    passport.authenticate('local', function(err, user, info){
+        if(err){
+            next(err);
+        } else if (!user){
+            response.sendStatus(401);
+        } else {
+            response.sendStatus(200);
+        }
+    })(request, response, next);
+});
+    
 // socket io setup
 var io = require('socket.io')(server);
-var sockets = [];
 var socketPassport = require('passport.socketio');
 io.set('authorization', socketPassport.authorize({
     cookieParser: cookieParser,
@@ -123,7 +116,9 @@ io.set('authorization', socketPassport.authorize({
 
 io.on('connection', function(socket){
     console.log('Added a new socket');
-    sockets.push(socket);
+    socket.on('message-send', function(message){
+        
+    });
     socket.on('test', function(){
         if(socket.request.user && socket.request.user.logged_in){
             socket.emit('authed');

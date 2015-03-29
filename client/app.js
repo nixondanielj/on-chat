@@ -1,7 +1,10 @@
-(function(){
-    var app = angular.module('OnChat', ['ngRoute', 'ngMaterial']);
+(function(angular){
+    var app = angular.module('OnChat', ['ngRoute', 'ngMaterial', 'ngResource']);
     
     app.config(['$routeProvider', '$mdThemingProvider', function($routeProvider, $mdThemingProvider){
+        var auth = ['$q', 'AuthService', function($q, authSvc){
+            return authSvc.check();
+        }];
         $routeProvider
             .when('/', {
                 templateUrl: 'views/home.html',
@@ -11,12 +14,19 @@
             .when('/chat/:groupId', {
                 templateUrl: 'views/chat.html',
                 controller: 'ChatController',
-                controllerAs: 'chatCtrl'
+                controllerAs: 'chatCtrl',
+                resolve: { auth: auth }
             })
             .otherwise({
                 redirectTo: '/'
             });
         $mdThemingProvider.theme('default')
             .accentPalette('green');
+    }]).run(['$rootScope', '$location', function($rootScope, $location){
+        $rootScope.$on('$routeChangeError', function(evt, current, previous, eventObj){
+            if(!eventObj.authenticated) {
+                $location.path('/');
+            }
+        });
     }]);
-})();
+})(window.angular);
