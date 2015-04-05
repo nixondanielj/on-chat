@@ -8,19 +8,20 @@ ctrl
     .get(function(req, res){
         User.populate(
             req.user, 
-            { path: 'activeChannels inactiveChannels' },
+            { 
+                path: 'channels' ,
+                options: {
+                    sort: {
+                        'activity': 1
+                    }
+                }
+            },
             function(err, user){
                 if(err){
                     console.error(err);
                     return res.sendStatus(500);
                 }
-                user.inactiveChannels.forEach(function(ic){
-                    ic.active = false;
-                });
-                user.activeChannels.forEach(function(ac){
-                    ac.active = true;
-                });
-                res.json(user.activeChannels.concat(user.inactiveChannels));
+                res.json(user.channels);
             });
     })
     .post(function(req, res){

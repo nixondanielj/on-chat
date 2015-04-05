@@ -2,8 +2,8 @@ var mongoose = require('mongoose');
 var ObjectId = mongoose.Schema.ObjectId;
 var channelSchema = mongoose.Schema({
     messageGroups: [{ type: ObjectId, ref: 'MessageGroup' }],
-    name: { type: String },
-    type: { type: String },
+    name: { type: String, required: true },
+    type: { type: String, required: true },
     admins: [{ type: ObjectId, ref: 'User'}]
 });
 
