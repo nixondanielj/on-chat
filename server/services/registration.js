@@ -28,7 +28,6 @@ svc.register = function(email, password){
             return createUser(email, password);
         })
         .then(addUserToUserChannels)
-        .then(userRepo.upsert)
         .then(function(user){
             d.resolve(user);
         }, function(err){
@@ -62,7 +61,7 @@ var addUserToUserChannels = function(user){
         users.forEach(function(u){
             if(u.id !== user.id){
                 var uPromise = q.defer();
-                uPromises.push(uPromise);
+                uPromises.push(uPromise.promise);
                 var channel = new Channel();
                 channel.name = u.getName() + ' AND ' + user.getName();
                 channel.type = config.channelTypes.user;
@@ -76,11 +75,11 @@ var addUserToUserChannels = function(user){
                         name: user.getName()
                     });
                     uPromise.resolve(userRepo.upsert(u));
-                });
+                }, uPromise.reject);
             }
         });
         // need to implement rollback in case of error
-        q.all(uPromises).then(function(){
+        q.all(uPromises).done(function(users){
             d.resolve(userRepo.upsert(user));
         }, function(err){
             d.reject(err);
