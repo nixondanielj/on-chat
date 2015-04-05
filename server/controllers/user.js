@@ -48,7 +48,8 @@ module.exports = function(authFunc) {
                 });
             }
         });
-    
+        
+    // we're in promise hell here, this needs a rewrite...
     function addDefaultChannels(user){
         var deferred = q.defer();
         User.find({}, function(err, users){
@@ -60,26 +61,37 @@ module.exports = function(authFunc) {
             var userSavePromises = [];
             users.forEach(function(u){
                 if(user.id !== u.id) {
-                    var channel = new Channel({
+                    var userSavePromise = q.defer();
+                    userSavePromises.push(userSavePromise.promise);
+                    // wrapping this creation in a promise might improve clarity
+                    Channel.create({
                         // this name should never be displayed...
                         name: u.getName() + ' AND ' + user.getName(),
                         type: config.channelTypes.user
+                    }, function(err, channel){
+                        if(err){
+                            console.error('failed to create channel');
+                            userSavePromise.reject(err);
+                        } else {
+                            user.channels.push({
+                                channel: channel,
+                                name: u.getName()
+                            });
+                            u.channels.push({
+                                channel: channel,
+                                name: user.getName()
+                            });
+                            saveUser(u).then(userSavePromise.resolve, 
+                                userSavePromise.reject);
+                        }
                     });
-                    user.channels.push({
-                        channel: channel,
-                        name: u.getName()
-                    });
-                    u.channels.push({
-                        channel: channel,
-                        name: user.getName()
-                    });
-                    userSavePromises.push(saveUser(u));
                 }
             });
             
             // handle completion of all user saves
             // if all good, save registering user
             q.all(userSavePromises).then(function(users){
+                console.info(user.channels);
                 saveUser(user).then(function(user){
                     deferred.resolve(user);
                 }, function(err){

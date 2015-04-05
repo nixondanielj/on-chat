@@ -5,5 +5,10 @@ module.exports = {
     auth: {
         key: 'my_key',
         secret: 'my_secret'
+    },
+    channelTypes: {
+        user: 'user',
+        group: 'group',
+        meeting: 'meeting'
     }
 };

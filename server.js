@@ -14,14 +14,14 @@ var MongoStore = require('connect-mongo')(session);
 var server = http.createServer(app);
 
 // config
-var config = require('.server/config/config.js');
+var config = require('./server/config/config.js');
 mongoose.connect(config.db.url);
 
 var sessionStore = new MongoStore({ mongooseConnection: mongoose.connection });
 
-require('.server/config/passport')(passport);
+require('./server/config/passport')(passport);
 
-require('.server/config/socket')
+require('./server/config/socket')
     (require('socket.io')(server), 
     cookieParser, 
     sessionStore, 
