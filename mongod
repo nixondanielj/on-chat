@@ -1,1 +1,4 @@
+mv data/.gitignore ./data.gitignore.temp
+rm -rf data/*
+mv ./data.gitignore.temp data/.gitignore
 mongod --bind_ip=$IP --dbpath=data --nojournal --rest "$@"
