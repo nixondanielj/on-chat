@@ -1,5 +1,6 @@
 var LocalStrategy = require('passport-local').Strategy;
 var User = require('../models/user');
+var registrationSvc = require('../services/registration');
 
 module.exports = function(passport){
     
@@ -24,7 +25,7 @@ module.exports = function(passport){
                     return done(err);
                 } else if (!user){
                     return done(null, false);
-                } else if (!user.checkPassword(password)) {
+                } else if (!registrationSvc.checkPassword(user, password)) {
                     return done(null, false);
                 } else {
                     return done(null, user);

@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-var bcrypt = require('bcrypt-nodejs');
 var ObjectId = mongoose.Schema.ObjectId;
 var userSchema = mongoose.Schema({
     // creating separate object for each associated login
@@ -19,14 +18,6 @@ var userSchema = mongoose.Schema({
 userSchema.methods.getName = function() {
     // add more '||'s as we add new auth mechs
     return this.local.displayName || 'anonymous';
-};
-
-userSchema.methods.getHash = function(password){
-    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-};
-
-userSchema.methods.checkPassword = function(password){
-    return bcrypt.compareSync(password, this.local.password);
 };
 
 module.exports = mongoose.model('User', userSchema);
