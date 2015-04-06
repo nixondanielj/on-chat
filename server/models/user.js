@@ -11,7 +11,8 @@ var userSchema = mongoose.Schema({
         channel: { type: ObjectId, ref: 'Channel', required: true },
         activity: { type: Number, required: true, default: 0 },
         // this name overrides the default name of the channel if present
-        name: { type: String }
+        name: { type: String },
+        type: { type: String, required: true }
     }]
 });
 

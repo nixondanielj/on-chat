@@ -54,6 +54,7 @@ var createUser = function (email, password){
     return userRepo.upsert(user);
 };
 
+// TODO - factor out an "addUserToChannel" or something
 var addUserToUserChannels = function(user){
     var d = q.defer();
     userRepo.getAll().then(function(users){
@@ -68,11 +69,13 @@ var addUserToUserChannels = function(user){
                 channelRepo.upsert(channel).then(function(channel){
                     user.channels.push({
                         channel: channel,
-                        name: u.getName()
+                        name: u.getName(),
+                        type: channel.type
                     });
                     u.channels.push({
                         channel: channel,
-                        name: user.getName()
+                        name: user.getName(),
+                        type: channel.type
                     });
                     uPromise.resolve(userRepo.upsert(u));
                 }, uPromise.reject);

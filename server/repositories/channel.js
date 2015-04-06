@@ -15,4 +15,20 @@ repo.upsert = function(channel){
     return d.promise;
 };
 
+repo.getByIds = function(ids){
+    var d = q.defer();
+    Channel.find({
+        '_id': {
+            $in: ids
+        }
+    }, function(err, channels){
+        if(err){
+            d.reject(err);
+        } else {
+            d.resolve(channels);
+        }
+    });
+    return d.promise;
+};
+
 module.exports = repo;

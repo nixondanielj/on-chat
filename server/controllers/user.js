@@ -15,7 +15,7 @@ module.exports = function(authFunc) {
                     .then(function(){
                         registrationSvc.register(email, password)
                             .then(function(user){
-                                console.log('created user ' + user.email);
+                                console.log('created user ' + user.local.email);
                                 res.sendStatus(201);
                             });
                     }, function(){
