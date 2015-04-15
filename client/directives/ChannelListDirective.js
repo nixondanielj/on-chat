@@ -1,5 +1,7 @@
 (function(angular, config){
-    angular.module(config.appName).directive('channelList', [function(){
+    angular.module(config.appName).directive('channelList', 
+    [
+    function(){
         return {
             restrict: 'E',
             templateUrl: '/views/channel-list.html',

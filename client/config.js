@@ -4,5 +4,6 @@ window.config = {
         user: 'user',
         team: 'team'
     },
-    appName: 'OnChat'
+    appName: 'OnChat',
+    defaultChannel: 'announcements'
 };

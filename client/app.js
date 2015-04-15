@@ -11,7 +11,7 @@
                 controller: 'HomeController',
                 controllerAs: 'homeCtrl'
             })
-            .when('/chat/:groupId', {
+            .when('/chat/:channelId', {
                 templateUrl: 'views/chat.html',
                 controller: 'ChatController',
                 controllerAs: 'chatCtrl',

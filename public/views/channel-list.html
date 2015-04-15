@@ -2,7 +2,7 @@
 <md-list>
     <md-item ng-repeat="channel in channels">
         <md-item-content ng-show="$index < channelListCtrl.showCount">
-            <md-button class="text-left" flex>
+            <md-button ng-click="switchChannel(channel.name)" class="text-left" flex>
                 {{ channel.name }}
             </md-button>
         </md-item-content>

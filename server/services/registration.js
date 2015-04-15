@@ -28,6 +28,7 @@ svc.register = function(email, password){
             return createUser(email, password);
         })
         .then(addUserToUserChannels)
+        .then(addUserToBoardChannels)
         .then(function(user){
             d.resolve(user);
         }, function(err){
@@ -52,6 +53,24 @@ var createUser = function (email, password){
     user.local.password = getHash(password);
     user.local.displayName = email.slice(0, email.lastIndexOf('@'));
     return userRepo.upsert(user);
+};
+
+var addUserToBoardChannels = function(user){
+    var d = q.defer();
+    channelRepo.getBoards()
+        .then(function(boards){
+            boards.forEach(function(board){
+                user.channels.push({
+                    channel: board,
+                    name: board.name,
+                    type: board.type
+                });
+            });
+            userRepo.upsert(user).then(function(user){
+                d.resolve(user);
+            }, d.reject);
+        });
+    return d.promise;
 };
 
 // TODO - factor out an "addUserToChannel" or something

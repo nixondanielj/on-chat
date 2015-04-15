@@ -32,7 +32,7 @@ require('./server/config/socket')
 app.use(morgan('dev'));
 // parse cookies
 app.use(cookieParser());
-// parse body - difference from bodyParser.<specific>Parser?
+// parse body - deprecated and should be updated
 app.use(bodyParser());
 // passport
 app.use(session({ 
@@ -46,6 +46,8 @@ app.use(passport.session());
 // routing
 require('./server/routes.js')(app, passport);
 app.use(express.static(__dirname + '/public'));
+
+require('./server/config/seed')();
 
 //launch
 server.listen(process.env.PORT || 3000, process.env.IP || '0.0.0.0', function(){

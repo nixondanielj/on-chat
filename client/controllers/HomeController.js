@@ -1,4 +1,4 @@
-(function(angular){
+(function(angular, config){
     angular.module('OnChat').controller(
         'HomeController', 
         ['AuthService', '$mdToast', '$location', 'UserService',
@@ -17,7 +17,7 @@
             this.signin = function(email, password){
                 loadingFor(authSvc.authenticate(email, password)
                 .then(function(){
-                    $location.path('/chat/test');
+                    $location.path('/chat/' + config.defaultChannel);
                 }, function() {
                     $mdToast.show(
                         $mdToast.simple()
@@ -40,4 +40,4 @@
                 }));
             };
     }]);
-})(window.angular);
+})(window.angular, window.config);

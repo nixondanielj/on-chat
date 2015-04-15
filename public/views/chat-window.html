@@ -18,7 +18,11 @@
             </div>
         </div>
     </md-whiteframe>
+    <div flex ng-show="chatCtrl.loading">
+        <h3>Loading...</h3>
+    </div>
 </md-content>
+<md-progress-linear ng-show="chatCtrl.loading" md-mode="indeterminate"></md-progress-linear>
 <md-divider></md-divider>
 <md-content class="md-padding">
     <form layout="row" ng-submit="chatCtrl.post(chatCtrl.message)">

@@ -8,7 +8,8 @@ module.exports = {
     },
     channelTypes: {
         user: 'user',
-        group: 'group',
-        meeting: 'meeting'
+        team: 'team',
+        chat: 'chat',
+        board: 'board'
     }
 };

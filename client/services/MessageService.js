@@ -10,7 +10,7 @@
         svc.get = function(){
             return $http.get('/messages/' + svc.channel.substr(1));
         };
-        svc.channel = '#main';
+        svc.channel = 'main';
         return svc;
     }]);
 })(window.angular);
