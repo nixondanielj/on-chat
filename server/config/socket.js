@@ -16,4 +16,5 @@ module.exports = function(io, cookieParser, sessionStore, config){
             }
         }
     }));
+    require('../socket/message')(io);
 };

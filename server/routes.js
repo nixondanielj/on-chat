@@ -6,6 +6,7 @@ module.exports = function(app, passport){
             res.sendStatus(401);
         }
     };
+    // mount controllers
     app.use('/user', require('./controllers/user')(authFunc));
     app.use('/auth', require('./controllers/auth')(authFunc, passport));
     app.use('/channel', authFunc, require('./controllers/channel'));

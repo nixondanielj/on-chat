@@ -7,12 +7,33 @@
             function(msgSvc, evtSvc, channelSvc){
                 var ctrl = this;
                 
+                ctrl.messageGroups = [];
+                
                 ctrl.channel = channelSvc.currentChannel;
                 
                 ctrl.loading = true;
                 
                 evtSvc.onClient('channel-changed', function(channel){
-                    ctrl.loading = false;
+                    ctrl.loading = true;
+                    msgSvc.get().then(function(messages){
+                        var currentGroup = {};
+                        ctrl.messageGroups = [];
+                        // group messages
+                        messages.forEach(function(message){
+                            if (currentGroup.sender === message.sender){
+                                currentGroup.push(message);
+                            } else {
+                                if(currentGroup.messages){
+                                    ctrl.messageGroups.push(currentGroup);
+                                }
+                                currentGroup = {
+                                    sender: message.sender,
+                                    messages: [message]
+                                };
+                            }
+                        });
+                        ctrl.loading = false;
+                    });
                     ctrl.channel = channel.name;
                 });
                 

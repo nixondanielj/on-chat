@@ -29,8 +29,7 @@
         <md-icon md-svg-src="img/message.svg" class="message-icon" flex="5"></md-icon>
         <md-input-container class="no-pad" flex md-no-float>
             <label>Message</label>
-            <textarea ng-model="chatCtrl.message">
-            </textarea>
+            <input required type="text" ng-model="chatCtrl.message">
         </md-input-container>
     </form>
 </md-content>

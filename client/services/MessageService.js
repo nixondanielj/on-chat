@@ -1,16 +1,22 @@
 (function(angular){
     angular.module('OnChat')
-        .service('MessageService', ['EventService', '$http', function(evtSvc, $http){
+        .service('MessageService', 
+        ['EventService', 'ChannelService', '$http', 
+        function(evtSvc, channelSvc, $http){
         
-        // service construction
         var svc = {};
         svc.send = function(message){
-            evtSvc.toServer('message-send', message);
+            if(message){
+                message = {
+                    text: message.trim(),
+                    channel: channelSvc.currentChannel
+                };
+                evtSvc.toServer('message-send', message);
+            }
         };
         svc.get = function(){
-            return $http.get('/messages/' + svc.channel.substr(1));
+            return $http.get('/messages/' + channelSvc.currentChannel).$promise;
         };
-        svc.channel = 'main';
         return svc;
     }]);
 })(window.angular);
