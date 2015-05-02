@@ -5,15 +5,12 @@
         var svc = $resource('/channel');
         svc.currentChannel = '';
         svc.setChannel = function(newChannel){
-            svc.query().$promise.then(function(channels){
-                channels = channels.filter(function(channel){
-                    return channel.name === newChannel;
-                });
-                if(channels.length){
-                    evtSvc.toClient('channel-changed', channels[0]);
-                }
-            });
+            evtSvc.toServer('channel-change', newChannel);
         };
+        evtSvc.onServer('channel-changed', function(newChannelId){
+            evtSvc.toClient('channel-changed', newChannelId);
+            svc.currentChannel = newChannelId;
+        });
         return svc;
     }]);
 })(window.angular, window.config);
